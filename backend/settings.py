@@ -1,5 +1,5 @@
 from flask import Flask
-from food_review_prediction.config import ApplicationConfig
+from .config import ApplicationConfig
 from datetime import timedelta
 
 def init(app:Flask):
@@ -7,5 +7,6 @@ def init(app:Flask):
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_DATABASE_URI=ApplicationConfig.DATABASE_URI,
         JWT_SECRET_KEY="SUPER-SECRET",
-        JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=30)
+        JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=30),
+        UPLOAD_FOLDER = 'uploads'
     )

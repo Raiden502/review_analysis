@@ -28,7 +28,7 @@ export default function ShopProductList({ products, loading, ...other }) {
     >
       {(loading ? [...Array(12)] : products).map((product, index) =>
         product ? (
-          <ShopProductCard key={product.id} product={product} />
+          <ShopProductCard key={product.prod_id} product={product} />
         ) : (
           <SkeletonProductItem key={index} />
         )

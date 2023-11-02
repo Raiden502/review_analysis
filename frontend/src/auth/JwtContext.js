@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
-import axios from '../utils/axios';
+import axiosInstance from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
@@ -71,19 +71,22 @@ export function AuthProvider({ children }) {
   const initialize = useCallback(async () => {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
+      console.log("ff", accessToken)
 
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
+      if (accessToken) {
+        // && isValidToken(accessToken)
+        // setSession(accessToken);
+        localStorage.setItem('accessToken', accessToken);
 
-        const response = await axios.get('/api/account/my-account');
+        // const response = await axios.get('/api/account/my-account');
 
-        const { user } = response.data;
+        // const { user } = response.data;
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
-            user,
+            user: 'dummyx`',
           },
         });
       } else {
@@ -113,25 +116,35 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axiosInstance.post('/login', {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user,
-      },
-    });
+    const { accessToken, user, error_code } = response.data;
+    console.log(error_code)
+    if (error_code) {
+      setSession(null);
+      dispatch({
+        type: 'INITIAL',
+        payload: {
+          isAuthenticated: false,
+          user: null,
+        },
+      });
+    } else {
+      setSession(accessToken);
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+        },
+      });
+    }
   }, []);
 
   // REGISTER
   const register = useCallback(async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
+    const response = await axiosInstance.post('/register', {
       email,
       password,
       firstName,

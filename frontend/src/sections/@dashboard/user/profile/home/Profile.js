@@ -18,9 +18,9 @@ Profile.propTypes = {
 export default function Profile({ info, posts }) {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
-        <Stack spacing={3}>
-          <ProfileFollowInfo follower={info.follower} following={info.following} />
+      <Grid item xs={12} md={4} lg={12}>
+        <Stack spacing={3} direction='row'>
+          {/* <ProfileFollowInfo follower={info.follower} following={info.following} /> */}
 
           <ProfileAbout
             quote={info.quote}
@@ -37,11 +37,11 @@ export default function Profile({ info, posts }) {
 
       <Grid item xs={12} md={8}>
         <Stack spacing={3}>
-          <ProfilePostInput />
+          {/* <ProfilePostInput /> */}
 
-          {posts.map((post) => (
+          {/* {posts.map((post) => (
             <ProfilePostCard key={post.id} post={post} />
-          ))}
+          ))} */}
         </Stack>
       </Grid>
     </Grid>

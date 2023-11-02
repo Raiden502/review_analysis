@@ -37,13 +37,14 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/list';
+import axiosInstance from '../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', align: 'left' },
   { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
+  { id: 'inventoryType', label: 'Tags', align: 'center', width: 180 },
   { id: 'price', label: 'Price', align: 'right' },
   { id: '' },
 ];
@@ -99,10 +100,10 @@ export default function EcommerceProductListPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (products.length) {
+    if (products.length && tableData.length===0) {
       setTableData(products);
     }
-  }, [products]);
+  }, [products, tableData, openConfirm]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -137,15 +138,26 @@ export default function EcommerceProductListPage() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
+  const handleDeleteRow = async(id) => {
+    try {
+      const res =  await axiosInstance.post('/delprod', { prod_id: id })
+  
+      if (res.data.error_code === 0) {
+        console.log(res.data)
+        const deleteRow = tableData.filter((row) => row.id !== id);
+        setSelected([]);
+        setTableData(deleteRow);
+        if (page > 0) {
+          if (dataInPage.length < 2) {
+            setPage(page - 1);
+          }
+        }
       }
+      handleCloseConfirm()
+    }
+    catch (error) {
+      console.error(error)
+      handleCloseConfirm()
     }
   };
 
@@ -220,7 +232,7 @@ export default function EcommerceProductListPage() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -237,7 +249,7 @@ export default function EcommerceProductListPage() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
@@ -248,12 +260,12 @@ export default function EcommerceProductListPage() {
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -262,13 +274,13 @@ export default function EcommerceProductListPage() {
                     .map((row, index) =>
                       row ? (
                         <ProductTableRow
-                          key={row.id}
+                          key={row.prod_id}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
-                          onViewRow={() => handleViewRow(row.name)}
+                          selected={selected.includes(row.prod_id)}
+                          onSelectRow={() => onSelectRow(row.prod_id)}
+                          onDeleteRow={() => handleDeleteRow(row.prod_id)}
+                          onEditRow={() => handleEditRow(row.p_name)}
+                          onViewRow={() => handleViewRow(row.p_name)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

@@ -41,7 +41,9 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, cover, createdAt, inventoryType, price } = row;
+
+  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
+  const { p_name, p_date, p_category, p_price } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -66,16 +68,16 @@ export default function ProductTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Image
               disabledEffect
               visibleByDefault
-              alt={name}
+              alt={p_name}
               src={cover}
               sx={{ borderRadius: 1.5, width: 48, height: 48 }}
             />
@@ -87,28 +89,28 @@ export default function ProductTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {name}
+              {p_name}
             </Link>
           </Stack>
         </TableCell>
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell>{fDate(p_date)}</TableCell>
 
         <TableCell align="center">
           <Label
             variant="soft"
             color={
-              (inventoryType === 'out_of_stock' && 'error') ||
-              (inventoryType === 'low_stock' && 'warning') ||
+              (p_category === 'out_of_stock' && 'error') ||
+              (p_category === 'low_stock' && 'warning') ||
               'success'
             }
             sx={{ textTransform: 'capitalize' }}
           >
-            {inventoryType ? sentenceCase(inventoryType) : ''}
+            {p_category ? sentenceCase(p_category) : ''}
           </Label>
         </TableCell>
 
-        <TableCell align="right">{fCurrency(price)}</TableCell>
+        <TableCell align="right">{fCurrency(p_price)}</TableCell>
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

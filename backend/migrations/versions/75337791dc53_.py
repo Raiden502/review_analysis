@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7e28791fb5ba
+Revision ID: 75337791dc53
 Revises: 
-Create Date: 2023-08-05 13:39:01.820420
+Create Date: 2023-10-31 19:41:19.825971
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e28791fb5ba'
+revision = '75337791dc53'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,7 +27,8 @@ def upgrade():
     sa.Column('c_role', sa.String(length=100), nullable=False),
     sa.Column('c_date', sa.DateTime(), nullable=False),
     sa.Column('c_is_active', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('cons_id')
+    sa.PrimaryKeyConstraint('cons_id'),
+    sa.UniqueConstraint('c_email')
     )
     op.create_table('products',
     sa.Column('prod_id', sa.BigInteger(), autoincrement=True, nullable=False),
@@ -53,9 +54,11 @@ def upgrade():
     op.create_table('reviews',
     sa.Column('rev_id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('prod', sa.BigInteger(), nullable=True),
+    sa.Column('cons', sa.BigInteger(), nullable=True),
     sa.Column('review', sa.String(length=200), nullable=False),
     sa.Column('rating', sa.Integer(), nullable=False),
     sa.Column('rev_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['cons'], ['consumers.cons_id'], ),
     sa.ForeignKeyConstraint(['prod'], ['products.prod_id'], ),
     sa.PrimaryKeyConstraint('rev_id')
     )

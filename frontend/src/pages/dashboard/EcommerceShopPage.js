@@ -82,6 +82,7 @@ export default function EcommerceShopPage() {
     setOpenFilter(false);
   };
 
+  console.log(dataFiltered)
   return (
     <>
       <Helmet>

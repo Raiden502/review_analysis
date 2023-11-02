@@ -67,8 +67,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     cover,
     available,
     price,
-    colors: colors[0],
-    size: sizes[4],
+    colors: 'blue',
+    size: 4,
     quantity: available < 1 ? 0 : 1,
   };
 
@@ -132,47 +132,47 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             color={inventoryType === 'in_stock' ? 'success' : 'error'}
             sx={{ textTransform: 'uppercase', mr: 'auto' }}
           >
-            {sentenceCase(inventoryType || '')}
+            {sentenceCase('NEW')}
           </Label>
 
           <Typography
             variant="overline"
             component="div"
             sx={{
-              color: status === 'sale' ? 'error.main' : 'info.main',
+              color: !product.p_status ? 'error.main' : 'info.main',
             }}
           >
-            {status}
+            {product.p_status ? 'IN STOCK' : 'OUT STOCK'}
           </Typography>
 
-          <Typography variant="h5">{name}</Typography>
+          <Typography variant="h5">{product.p_name}</Typography>
 
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Rating value={totalRating} precision={0.1} readOnly />
+            <Rating value={5} precision={0.1} readOnly />
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
+              ({fShortenNumber(23)}
               reviews)
             </Typography>
           </Stack>
 
           <Typography variant="h4">
-            {priceSale && (
+            {product.p_price && (
               <Box
                 component="span"
                 sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
               >
-                {fCurrency(priceSale)}
+                {fCurrency(product.p_price)}
               </Box>
             )}
 
-            {fCurrency(price)}
+            {fCurrency(product.p_price)}
           </Typography>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        {/* <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="subtitle2">Color</Typography>
 
           <Controller
@@ -192,7 +192,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
               />
             )}
           />
-        </Stack>
+        </Stack> */}
 
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="subtitle2" sx={{ height: 40, lineHeight: '40px', flexGrow: 1 }}>
@@ -216,11 +216,14 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
               },
             }}
           >
-            {sizes.map((size) => (
+            {/* {sizes.map((size) => (
               <MenuItem key={size} value={size}>
                 {size}
               </MenuItem>
-            ))}
+            ))} */}
+
+            <MenuItem key={1} value={1}>{1}</MenuItem>
+            <MenuItem key={2} value={2}>{2}</MenuItem>
           </RHFSelect>
         </Stack>
 

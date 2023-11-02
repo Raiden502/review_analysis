@@ -33,7 +33,7 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
-  profile: icon('ic_profile')
+  profile: icon('ic_profile'),
 };
 
 const navConfig = [
@@ -43,8 +43,8 @@ const navConfig = [
     subheader: 'Admin Management',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.dashboard },
-      { title: 'Add product', path: PATH_DASHBOARD.eCommerce.new, icon: ICONS.lock, },
-      { title: 'Edit Product', path: PATH_DASHBOARD.eCommerce.demoEdit, icon: ICONS.dashboard },
+      { title: 'Add product', path: PATH_DASHBOARD.eCommerce.new, icon: ICONS.lock },
+      { title: 'Product List', path: PATH_DASHBOARD.eCommerce.list, icon: ICONS.menuItem },
     ],
   },
 
@@ -52,8 +52,7 @@ const navConfig = [
     subheader: 'Accounts & Settings',
     items: [
       { title: 'account', path: PATH_DASHBOARD.user.account, icon: ICONS.chat },
-      { title: 'profile', path: PATH_DASHBOARD.user.profile , icon: ICONS.chat},
-      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+      { title: 'profile', path: PATH_DASHBOARD.user.profile, icon: ICONS.chat },
     ],
   },
   {
@@ -61,10 +60,8 @@ const navConfig = [
     items: [
       // E-COMMERCE
       { title: 'Shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.booking },
-      { title: 'Product', path: PATH_DASHBOARD.eCommerce.demoView, icon: ICONS.ecommerce },
       { title: 'Checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
       { title: 'Orders list', path: PATH_DASHBOARD.invoice.list, icon: ICONS.menuItem },
-      { title: 'Order details', path: PATH_DASHBOARD.invoice.demoView, icon: ICONS.invoice },
     ],
   },
 ];

@@ -84,7 +84,8 @@ export default function ProductDetailsCarousel({ product }) {
 
   const [selectedImage, setSelectedImage] = useState(-1);
 
-  const imagesLightbox = product.images.map((img) => ({ src: img }));
+  // const imagesLightbox = product?.images.map((img) => ({ src: img }));
+  const imagesLightbox = [{ src: '' }, {src:''}]
 
   const handleOpenLightbox = (imageUrl) => {
     const imageIndex = imagesLightbox.findIndex((image) => image.src === imageUrl);
@@ -113,7 +114,8 @@ export default function ProductDetailsCarousel({ product }) {
     focusOnSelect: true,
     variableWidth: true,
     centerPadding: '0px',
-    slidesToShow: product.images.length > 3 ? 3 : product.images.length,
+    // slidesToShow: product.images.length > 3 ? 3 : product.images.length,
+    slidesToShow: 3,
   };
 
   useEffect(() => {
@@ -137,9 +139,11 @@ export default function ProductDetailsCarousel({ product }) {
     carousel2.current?.slickNext();
   };
 
+  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
+
   const renderLargeImg = (
     <Box sx={{ mb: 3, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-      <Carousel {...carouselSettings1} asNavFor={nav2} ref={carousel1}>
+      {/* <Carousel {...carouselSettings1} asNavFor={nav2} ref={carousel1}>
         {product.images.map((img) => (
           <Image
             key={img}
@@ -150,21 +154,30 @@ export default function ProductDetailsCarousel({ product }) {
             sx={{ cursor: 'zoom-in' }}
           />
         ))}
-      </Carousel>
-
-      <CarouselArrowIndex
+      </Carousel> */}
+       <Image
+            key='1'
+            alt="product"
+            src={cover}
+            ratio="1/1"
+            onClick={() => handleOpenLightbox(cover)}
+            sx={{ cursor: 'zoom-in' }}
+          />
+      {/* <CarouselArrowIndex
         index={currentIndex}
-        total={product.images.length}
+        // total={product.images.length}
+        total={3}
         onNext={handleNext}
         onPrevious={handlePrev}
-      />
+      /> */}
     </Box>
   );
 
   const renderThumbnails = (
-    <StyledThumbnailsContainer length={product.images.length}>
+    // product.images.length
+    <StyledThumbnailsContainer length={3}>
       <Carousel {...carouselSettings2} asNavFor={nav1} ref={carousel2}>
-        {product.images.map((img, index) => (
+        {/* {product.images.map((img, index) => (
           <Image
             key={img}
             disabledEffect
@@ -180,7 +193,7 @@ export default function ProductDetailsCarousel({ product }) {
               }),
             }}
           />
-        ))}
+        ))} */}
       </Carousel>
     </StyledThumbnailsContainer>
   );
@@ -195,17 +208,15 @@ export default function ProductDetailsCarousel({ product }) {
         }}
       >
         {renderLargeImg}
-
-        {renderThumbnails}
       </Box>
 
-      <Lightbox
+      {/* <Lightbox
         index={selectedImage}
         slides={imagesLightbox}
         open={selectedImage >= 0}
         close={handleCloseLightbox}
         onGetCurrentIndex={(index) => setCurrentIndex(index)}
-      />
+      /> */}
     </>
   );
 }

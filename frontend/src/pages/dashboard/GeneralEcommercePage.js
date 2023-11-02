@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -27,6 +28,7 @@ import {
 import { AppWelcome } from '../../sections/@dashboard/general/app';
 // assets
 import { MotivationIllustration } from '../../assets/illustrations';
+import axiosInstance from '../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +39,22 @@ export default function GeneralEcommercePage() {
 
   const { themeStretch } = useSettingsContext();
 
+  const [dashboardData, setDasboardData] = useState({})
+
+  const getDashboard = async()=>{
+    await axiosInstance.get('/admindashboard')
+    .then((res)=>{
+      setDasboardData(res.data)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  useEffect(()=>{
+    getDashboard()
+  }, [])
+
   return (
     <>
       <Helmet>
@@ -45,32 +63,11 @@ export default function GeneralEcommercePage() {
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <AppWelcome
-              title={`Congratulations! \n ${user?.displayName}`}
-              description="Best seller of the month You have done 57.6% more sales today."
-              img={
-                <MotivationIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <EcommerceNewProducts list={_ecommerceNewProducts} />
-          </Grid>
-
           <Grid item xs={12} md={4}>
             <EcommerceWidgetSummary
-              title="Product Sold"
-              percent={2.6}
-              total={765}
+              title="Postive Ratings"
+              percent={(dashboardData.count_rating_5/dashboardData.total_reviews *100)}
+              total={dashboardData.count_rating_5}
               chart={{
                 colors: [theme.palette.primary.main],
                 series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
@@ -80,9 +77,44 @@ export default function GeneralEcommercePage() {
 
           <Grid item xs={12} md={4}>
             <EcommerceWidgetSummary
-              title="Total Balance"
-              percent={-0.1}
-              total={18765}
+              title="Negative Ratings"
+              percent={-(dashboardData.count_rating_1/dashboardData.total_reviews *100)}
+              total={dashboardData.count_rating_1}
+              chart={{
+                colors: [theme.palette.info.main],
+                series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
+              }}  
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <EcommerceWidgetSummary
+              title="Total Reviews"
+              // percent={(dashboardData.consumer/dashboardData.total_reviews *100)}
+              total={dashboardData.total_reviews}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <EcommerceWidgetSummary
+              title="Total Orders"
+              // percent={2.6}
+              total={dashboardData.orders}
+              chart={{
+                colors: [theme.palette.primary.main],
+                series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <EcommerceWidgetSummary
+              title="Total Products"
+              // percent={-0.1}
+              total={dashboardData.product}
               chart={{
                 colors: [theme.palette.info.main],
                 series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
@@ -92,9 +124,9 @@ export default function GeneralEcommercePage() {
 
           <Grid item xs={12} md={4}>
             <EcommerceWidgetSummary
-              title="Sales Profit"
-              percent={0.6}
-              total={4876}
+              title="Total Users"
+              // percent={0.6}
+              total={dashboardData.consumer}
               chart={{
                 colors: [theme.palette.warning.main],
                 series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
@@ -102,7 +134,7 @@ export default function GeneralEcommercePage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <EcommerceSaleByGender
               title="Sale By Gender"
               total={2324}
@@ -113,9 +145,9 @@ export default function GeneralEcommercePage() {
                 ],
               }}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <EcommerceYearlySales
               title="Yearly Sales"
               subheader="(+43%) than last year"
@@ -139,36 +171,20 @@ export default function GeneralEcommercePage() {
                 ],
               }}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={8}>
-            <EcommerceSalesOverview title="Sales Overview" data={_ecommerceSalesOverview} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <EcommerceCurrentBalance
-              title="Current Balance"
-              currentBalance={187650}
-              sentAmount={25500}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={6} lg={12}>
             <EcommerceBestSalesman
-              title="Best Salesman"
+              title="Best Reviews"
               tableData={_ecommerceBestSalesman}
               tableLabels={[
-                { id: 'seller', label: 'Seller' },
+                { id: 'seller', label: 'Review' },
                 { id: 'product', label: 'Product' },
                 { id: 'country', label: 'Country', align: 'center' },
-                { id: 'total', label: 'Total' },
+                { id: 'total', label: 'Rating' },
                 { id: 'rank', label: 'Rank', align: 'right' },
               ]}
             />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <EcommerceLatestProducts title="Latest Products" list={_ecommerceLatestProducts} />
           </Grid>
         </Grid>
       </Container>

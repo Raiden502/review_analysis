@@ -45,30 +45,30 @@ export default function UserProfilePage() {
       icon: <Iconify icon="ic:round-account-box" />,
       component: <Profile info={_userAbout} posts={_userFeeds} />,
     },
-    {
-      value: 'followers',
-      label: 'Followers',
-      icon: <Iconify icon="eva:heart-fill" />,
-      component: <ProfileFollowers followers={_userFollowers} />,
-    },
-    {
-      value: 'friends',
-      label: 'Friends',
-      icon: <Iconify icon="eva:people-fill" />,
-      component: (
-        <ProfileFriends
-          friends={_userFriends}
-          searchFriends={searchFriends}
-          onSearchFriends={(event) => setSearchFriends(event.target.value)}
-        />
-      ),
-    },
-    {
-      value: 'gallery',
-      label: 'Gallery',
-      icon: <Iconify icon="ic:round-perm-media" />,
-      component: <ProfileGallery gallery={_userGallery} />,
-    },
+    // {
+    //   value: 'followers',
+    //   label: 'Followers',
+    //   icon: <Iconify icon="eva:heart-fill" />,
+    //   component: <ProfileFollowers followers={_userFollowers} />,
+    // },
+    // {
+    //   value: 'friends',
+    //   label: 'Friends',
+    //   icon: <Iconify icon="eva:people-fill" />,
+    //   component: (
+    //     <ProfileFriends
+    //       friends={_userFriends}
+    //       searchFriends={searchFriends}
+    //       onSearchFriends={(event) => setSearchFriends(event.target.value)}
+    //     />
+    //   ),
+    // },
+    // {
+    //   value: 'gallery',
+    //   label: 'Gallery',
+    //   icon: <Iconify icon="ic:round-perm-media" />,
+    //   component: <ProfileGallery gallery={_userGallery} />,
+    // },
   ];
 
   return (

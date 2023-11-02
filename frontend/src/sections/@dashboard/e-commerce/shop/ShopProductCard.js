@@ -23,21 +23,25 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { id, name, cover, price, colors, status, available, sizes, priceSale } = product;
+  // const { id, name, cover, price, colors, status, available, sizes, priceSale } = product;
+
+  const status = true
+  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
+  const {p_category, p_code,  p_date,  p_desc,  p_name,  p_price,  p_status,  p_tag,  prod_id} = product;
 
   const dispatch = useDispatch();
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const linkTo = PATH_DASHBOARD.eCommerce.view(prod_id);
 
   const handleAddCart = async () => {
     const newProduct = {
-      id,
-      name,
+      prod_id,
+      p_name,
       cover,
-      available,
-      price,
-      colors: [colors[0]],
-      size: sizes[0],
+      // available,
+      p_price,
+      // colors: [colors[0]],
+      // size: sizes[0],
       quantity: 1,
     };
     try {
@@ -93,25 +97,24 @@ export default function ShopProductCard({ product }) {
           <Iconify icon="ic:round-add-shopping-cart" />
         </Fab>
 
-        <Image alt={name} src={cover} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+        <Image alt={p_name} src={cover} ratio="1/1" sx={{ borderRadius: 1.5 }} />
       </Box>
 
       <Stack spacing={2.5} sx={{ p: 3 }}>
         <Link component={RouterLink} to={linkTo} color="inherit" variant="subtitle2" noWrap>
-          {name}
+          {p_name}
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
 
           <Stack direction="row" spacing={0.5} sx={{ typography: 'subtitle1' }}>
-            {priceSale && (
+            {p_price && (
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(priceSale)}
+                {fCurrency(p_price)}
               </Box>
             )}
 
-            <Box component="span">{fCurrency(price)}</Box>
+            <Box component="span">{fCurrency(p_price)}</Box>
           </Stack>
         </Stack>
       </Stack>

@@ -28,8 +28,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'ara@gmail.com',
+    password: '1234',
   };
 
   const methods = useForm({

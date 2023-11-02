@@ -14,8 +14,16 @@ def register():
     return jsonify(HandleRegistration(request=request))
 
 @blueprint.route("/addprod", methods=["POST"])
-def product():
+def newproduct():
     return jsonify(HandleProdRegistration(request=request))
+
+@blueprint.route("/editprod", methods=["POST"])
+def editproduct():
+    return jsonify(HandleProdEdit(request=request))
+
+@blueprint.route("/delprod", methods=["POST"])
+def delproduct():
+    return jsonify(HandleProdDel(request=request))
 
 @blueprint.route("/review", methods=["POST"])
 def review():

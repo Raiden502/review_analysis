@@ -48,19 +48,20 @@ const SUMMARY = [
 export default function EcommerceProductDetailsPage() {
   const { themeStretch } = useSettingsContext();
 
-  const { name } = useParams();
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
   const { product, isLoading, checkout } = useSelector((state) => state.product);
+  console.log("product", product)
 
   const [currentTab, setCurrentTab] = useState('description');
 
   useEffect(() => {
-    if (name) {
-      dispatch(getProduct(name));
+    if (id) {
+      dispatch(getProduct(id));
     }
-  }, [dispatch, name]);
+  }, [dispatch, id]);
 
   const handleAddCart = (newProduct) => {
     dispatch(addToCart(newProduct));
@@ -74,12 +75,13 @@ export default function EcommerceProductDetailsPage() {
     {
       value: 'description',
       label: 'description',
-      component: product ? <Markdown children={product?.description} /> : null,
+      component: product ? <Markdown children={product?.p_desc} /> : null,
     },
     {
       value: 'reviews',
-      label: `Reviews (${product ? product.reviews.length : ''})`,
-      component: product ? <ProductDetailsReview product={product} /> : null,
+      label: `Reviews (${!product ? product?.reviews.length : ''})`,
+      // component: product ? <ProductDetailsReview product={product} /> : null,
+      component:  null,
     },
   ];
 

@@ -25,13 +25,14 @@ export default function EcommerceProductEditPage() {
   const { name } = useParams();
 
   const currentProduct = useSelector((state) =>
-    state.product.products.find((product) => paramCase(product.name) === name)
+    state.product.products.find((product) => paramCase(product.p_name) === name)
   );
 
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
+  console.log("current product", currentProduct)
   return (
     <>
       <Helmet>
@@ -47,7 +48,7 @@ export default function EcommerceProductEditPage() {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: currentProduct?.name },
+            { name: currentProduct?.p_name },
           ]}
         />
 

@@ -22,6 +22,8 @@ import FormProvider, {
   RHFAutocomplete,
 } from '../../../components/hook-form';
 
+import axiosInstance from '../../../utils/axios';
+
 // ----------------------------------------------------------------------
 
 const GENDER_OPTION = [
@@ -31,25 +33,28 @@ const GENDER_OPTION = [
 ];
 
 const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
+  { group: 'Appetizers', classify: ['Finger Foods', 'Dips', 'Bruschettas', 'Salads'] },
+  { group: 'Main Courses', classify: ['Pasta', 'Seafood', 'Poultry', 'Vegetarian'] },
+  { group: 'Desserts', classify: ['Cakes', 'Pies', 'Ice Cream', 'Cookies'] },
+  { group: 'Beverages', classify: ['Smoothies', 'Cocktails', 'Tea', 'Coffee'] },
 ];
 
 const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
+  'Sweet',
+  'Spicy',
+  'Fruit',
+  'Savory',
+  'Fresh',
+  'Creamy',
+  'Crunchy',
+  'Exotic',
+  'Comfort',
+  'Grilled',
+  'Homestyle',
+  'Green',
+  'Seafood',
+  'Breakfast',
+  'Dips',
 ];
 
 // ----------------------------------------------------------------------
@@ -74,18 +79,19 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
+      prod_id:currentProduct?.prod_id || '',
+      name: currentProduct?.p_name || '',
+      description: currentProduct?.p_desc || '',
       images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
+      code: currentProduct?.p_code || '',
       sku: currentProduct?.sku || '',
-      price: currentProduct?.price || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
+      price: currentProduct?.p_price || 0,
+      priceSale: currentProduct?.p_price || 0,
+      tags: currentProduct?.p_tag || [TAGS_OPTION[0]],
       inStock: true,
       taxes: true,
       gender: currentProduct?.gender || GENDER_OPTION[2].value,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      category: currentProduct?.p_category || CATEGORY_OPTION[0].classify[1],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -117,15 +123,33 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.eCommerce.list);
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
+    const newprod = {
+      prod_id:currentProduct?.prod_id || '',
+      name: values.name,
+      category: values.category,
+      tag: values.tags,
+      code: values.code,
+      price: values.priceSale,
+      desc: values.description,
+      active: values.inStock,
+    };
+    await axiosInstance
+      .post(!isEdit?'/addprod':'/editprod', newprod)
+      .then((res) => {
+        console.log('res', res);
+        if (res.data.error_code === 0) {
+          reset();
+          enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+          navigate(PATH_DASHBOARD.eCommerce.list);
+        }
+        else {
+          enqueueSnackbar('Failed');
+        }
+      })
+      .catch((err) => {
+        enqueueSnackbar('Error');
+        console.error(err);
+      });
   };
 
   const handleDrop = useCallback(
@@ -195,16 +219,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
               <Stack spacing={3} mt={2}>
                 <RHFTextField name="code" label="Product Code" />
-
-                <RHFTextField name="sku" label="Product SKU" />
-
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                    Gender
-                  </Typography>
-
-                  <RHFRadioGroup row spacing={4} name="gender" options={GENDER_OPTION} />
-                </Stack>
 
                 <RHFSelect native name="category" label="Category">
                   <option value="" />
