@@ -19,7 +19,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Label from '../../../../components/label';
 import Image from '../../../../components/image';
 import Scrollbar from '../../../../components/scrollbar';
-import { TableHeadCustom } from '../../../../components/table';
+import { TableEmptyRows, TableHeadCustom } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
@@ -47,9 +47,15 @@ export default function EcommerceBestSalesman({
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
-              {tableData.map((row) => (
-                <EcommerceBestSalesmanRow key={row.id} row={row} />
-              ))}
+              {tableData ? (
+                <>
+                  {tableData.map((row, index) => (
+                  <EcommerceBestSalesmanRow key={index} row={row} />
+                  ))}
+                </>
+              ) : (
+                <TableEmptyRows />
+              )}
             </TableBody>
           </Table>
         </Scrollbar>
@@ -62,13 +68,11 @@ export default function EcommerceBestSalesman({
 
 EcommerceBestSalesmanRow.propTypes = {
   row: PropTypes.shape({
-    flag: PropTypes.string,
-    name: PropTypes.string,
-    rank: PropTypes.string,
-    email: PropTypes.string,
-    total: PropTypes.number,
-    avatar: PropTypes.string,
-    category: PropTypes.string,
+    c_name: PropTypes.string,
+    p_name: PropTypes.string,
+    review: PropTypes.string,
+    rating: PropTypes.number,
+    rev_date: PropTypes.string,
   }),
 };
 
@@ -77,38 +81,32 @@ function EcommerceBestSalesmanRow({ row }) {
     <TableRow>
       <TableCell>
         <Stack direction="row" alignItems="center">
-          <Avatar alt={row.name} src={row.avatar} />
+          <Avatar alt={row.c_name} src='https://img.freepik.com/premium-psd/3d-cartoon-man-smiling-portrait-isolated-transparent-background-png-psd_888962-1570.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698192000&semt=ais' />
 
           <Box sx={{ ml: 2 }}>
-            <Typography variant="subtitle2"> {row.name} </Typography>
+            <Typography variant="subtitle2"> {row.c_name} </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {row.email}
+              {row.review}
             </Typography>
           </Box>
         </Stack>
       </TableCell>
 
-      <TableCell>{row.category}</TableCell>
+      <TableCell>{row.p_name}</TableCell>
 
       <TableCell>
-        <Image src={row.flag} alt="country flag" sx={{ maxWidth: 28, mx: 'auto' }} />
-      </TableCell>
-
-      <TableCell>{fCurrency(row.total)}</TableCell>
-
-      <TableCell align="right">
         <Label
           variant="soft"
           color={
-            (row.rank === 'Top 1' && 'primary') ||
-            (row.rank === 'Top 2' && 'info') ||
-            (row.rank === 'Top 3' && 'success') ||
-            (row.rank === 'Top 4' && 'warning') ||
+            (row.rating === 5 && 'primary')||
             'error'
           }
         >
-          {row.rank}
+          {row.rating}
         </Label>
+        </TableCell>
+      <TableCell align='center'>
+        {row.rev_date}
       </TableCell>
     </TableRow>
   );

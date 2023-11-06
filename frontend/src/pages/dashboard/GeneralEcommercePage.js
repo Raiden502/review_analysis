@@ -176,13 +176,12 @@ export default function GeneralEcommercePage() {
           <Grid item xs={12} md={6} lg={12}>
             <EcommerceBestSalesman
               title="Best Reviews"
-              tableData={_ecommerceBestSalesman}
+              tableData={dashboardData.reviews}
               tableLabels={[
                 { id: 'seller', label: 'Review' },
                 { id: 'product', label: 'Product' },
-                { id: 'country', label: 'Country', align: 'center' },
                 { id: 'total', label: 'Rating' },
-                { id: 'rank', label: 'Rank', align: 'right' },
+                { id: 'rank', label: 'Date', align: 'center' },
               ]}
             />
           </Grid>
