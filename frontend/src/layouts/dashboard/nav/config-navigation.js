@@ -51,8 +51,7 @@ const navConfig = [
   {
     subheader: 'Accounts & Settings',
     items: [
-      { title: 'account', path: PATH_DASHBOARD.user.account, icon: ICONS.chat },
-      { title: 'profile', path: PATH_DASHBOARD.user.profile, icon: ICONS.chat },
+      { title: 'account', path: PATH_DASHBOARD.user.account, icon: ICONS.user },
     ],
   },
   {

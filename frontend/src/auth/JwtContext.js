@@ -71,17 +71,9 @@ export function AuthProvider({ children }) {
   const initialize = useCallback(async () => {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
-      console.log("ff", accessToken)
 
       if (accessToken) {
-        // && isValidToken(accessToken)
-        // setSession(accessToken);
         localStorage.setItem('accessToken', accessToken);
-
-        // const response = await axios.get('/api/account/my-account');
-
-        // const { user } = response.data;
-
         dispatch({
           type: 'INITIAL',
           payload: {
@@ -132,7 +124,7 @@ export function AuthProvider({ children }) {
         },
       });
     } else {
-      setSession(accessToken);
+      localStorage.setItem('accessToken', accessToken)
       dispatch({
         type: 'LOGIN',
         payload: {

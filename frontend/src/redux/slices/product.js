@@ -213,7 +213,7 @@ export function getProduct(id) {
         prod_id: id ,
       }
       const response = await axios.post('/prodDetails',data);
-      dispatch(slice.actions.getProductSuccess(response.data.data[0]));
+      dispatch(slice.actions.getProductSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

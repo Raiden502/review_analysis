@@ -18,7 +18,6 @@ ProductDetailsReview.propTypes = {
 };
 
 export default function ProductDetailsReview({ product }) {
-  const { totalRating, totalReview, ratings } = product;
 
   const [openReview, setOpenReview] = useState(false);
 
@@ -30,7 +29,7 @@ export default function ProductDetailsReview({ product }) {
     setOpenReview(false);
   };
 
-  const total = sumBy(ratings, (star) => star.starCount);
+  // const total = sumBy(ratings, (star) => star.starCount);
 
   return (
     <>
@@ -54,16 +53,16 @@ export default function ProductDetailsReview({ product }) {
             Average rating
           </Typography>
 
-          <Typography variant="h2">{totalRating}/5</Typography>
+          <Typography variant="h2">{3}/5</Typography>
 
-          <Rating readOnly value={totalRating} precision={0.1} />
+          <Rating readOnly value={3.1} precision={0.1} />
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(totalReview)} reviews)
+            ({fShortenNumber(product.length)} reviews)
           </Typography>
         </Stack>
 
-        <Stack
+        {/* <Stack
           spacing={1.5}
           sx={{
             p: 3,
@@ -75,10 +74,10 @@ export default function ProductDetailsReview({ product }) {
           {ratings
             .slice(0)
             .reverse()
-            .map((rating) => (
-              <ProgressItem key={rating.name} star={rating} total={total} />
+            .map((rat) => (
+              <ProgressItem key={rat.name} star={rat} total={total} />
             ))}
-        </Stack>
+        </Stack> */}
 
         <Stack
           alignItems="center"
@@ -102,9 +101,9 @@ export default function ProductDetailsReview({ product }) {
 
       <Divider />
 
-      <ProductDetailsReviewList reviews={product.reviews} />
+      <ProductDetailsReviewList reviews={product} />
 
-      <ProductDetailsReviewNewDialog open={openReview} onClose={handleCloseReview} />
+      {/* <ProductDetailsReviewNewDialog open={openReview} onClose={handleCloseReview} /> */}
     </>
   );
 }

@@ -54,7 +54,6 @@ export default function EcommerceProductDetailsPage() {
 
   const { product, isLoading, checkout } = useSelector((state) => state.product);
   console.log("product", product)
-
   const [currentTab, setCurrentTab] = useState('description');
 
   useEffect(() => {
@@ -75,20 +74,19 @@ export default function EcommerceProductDetailsPage() {
     {
       value: 'description',
       label: 'description',
-      component: product ? <Markdown children={product?.p_desc} /> : null,
+      component: product?.data[0] ? <Markdown children={product?.data[0]?.p_desc} /> : null,
     },
     {
       value: 'reviews',
-      label: `Reviews (${!product ? product?.reviews.length : ''})`,
-      // component: product ? <ProductDetailsReview product={product} /> : null,
-      component:  null,
+      label: `Reviews (${!product?.reviews ? product?.reviews.length : '0'})`,
+      component: product?.reviews ? <ProductDetailsReview product={product?.reviews} /> : null,
     },
   ];
 
   return (
     <>
       <Helmet>
-        <title>{`Ecommerce: ${product?.name || ''} | Minimal UI`}</title>
+        <title>{`Ecommerce: ${product?.data[0]?.name || ''} | Minimal UI`}</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -104,22 +102,22 @@ export default function EcommerceProductDetailsPage() {
               name: 'Shop',
               href: PATH_DASHBOARD.eCommerce.shop,
             },
-            { name: product?.name },
+            { name: product?.data[0]?.name },
           ]}
         />
 
         <CartWidget totalItems={checkout.totalItems} />
 
-        {product && (
+        {product?.data[0] && (
           <>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6} lg={7}>
-                <ProductDetailsCarousel product={product} />
+                <ProductDetailsCarousel product={product?.data[0]} />
               </Grid>
 
               <Grid item xs={12} md={6} lg={5}>
                 <ProductDetailsSummary
-                  product={product}
+                  product={product?.data[0]}
                   cart={checkout.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}

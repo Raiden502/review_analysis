@@ -291,7 +291,7 @@ def HandleProdDet(request):
                     select * from reviews where prod = :id
                 """
             sql = text(query)
-            result2 = conn.execute(sql, params)
+            result2 = conn.execute(sql, {"id": int(data["prod_id"])})
             return {
                 "status": "success",
                 "error_code": 0,

@@ -31,8 +31,8 @@ export default function ProductDetailsReviewList({ reviews }) {
           },
         }}
       >
-        {reviews.map((review) => (
-          <ReviewItem key={review.id} review={review} />
+        {reviews.map((review, index) => (
+          <ReviewItem key={index} review={review} />
         ))}
       </Stack>
 
