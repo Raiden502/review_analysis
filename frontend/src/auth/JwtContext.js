@@ -74,8 +74,8 @@ export function AuthProvider({ children }) {
 
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        const userData = localStorage.getItem('users')
-        console.table(userData)
+        const userData =JSON.parse(localStorage.getItem('users'))
+        console.table("userData",userData)
         dispatch({
           type: 'INITIAL',
           payload: {
@@ -128,7 +128,7 @@ export function AuthProvider({ children }) {
     } else {
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('cons_id', data.consid)
-      localStorage.setItem('users', {"consid": user.consid, "role": user.role, "active":user.active, "displayName":user.displayName, "email":user.email})
+      localStorage.setItem('users', JSON.stringify(user))
       dispatch({
         type: 'LOGIN',
         payload: {
