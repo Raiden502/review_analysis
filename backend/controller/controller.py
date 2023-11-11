@@ -14,7 +14,7 @@ def HandleLogin(request):
     try:
         with db.session.connection() as conn:
             query = f"""
-                    select cons_id, c_role, c_is_active from consumers where c_email=:email and c_password=:pass
+                    select cons_id, c_role, c_is_active, c_name, c_email from consumers where c_email=:email and c_password=:pass
                 """
             sql = text(query)
             params = {"email": data["email"], "pass": data["password"]}
@@ -27,7 +27,7 @@ def HandleLogin(request):
                     "data": {"consid": response[0], "role": response[1]},
                     "message": "login successfull",
                     "accessToken": "3245etgfdety6256",
-                    "user": data["email"],
+                    "user":{"consid": response[0], "role": response[1], "active":response[2], "displayName":response[3], "email":response[4]},
                 }
             else:
                 return {"status": "failed", "error_code": 1, "message": "login failed"}
