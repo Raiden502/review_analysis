@@ -18,26 +18,30 @@ import {
 import { LoadingButton } from '@mui/lab';
 // components
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import axiosInstance from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 ProductDetailsNewReviewForm.propTypes = {
   onClose: PropTypes.func,
+  prod:PropTypes.object,
+  setReload: PropTypes.any,
+  reload:PropTypes.bool
 };
 
-export default function ProductDetailsNewReviewForm({ onClose, ...other }) {
+export default function ProductDetailsNewReviewForm({ onClose, prod, setReload,reload, ...other }) {
   const ReviewSchema = Yup.object().shape({
-    rating: Yup.mixed().required('Rating is required'),
+    // rating: Yup.mixed().required('Rating is required'),
     review: Yup.string().required('Review is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    // name: Yup.string().required('Name is required'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
-    rating: null,
+    // rating: null,
     review: '',
-    name: '',
-    email: '',
+    // name: '',
+    // email: '',
   };
 
   const methods = useForm({
@@ -53,14 +57,26 @@ export default function ProductDetailsNewReviewForm({ onClose, ...other }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      onClose();
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
+    const cons_id = localStorage.getItem('cons_id')
+    if(cons_id){
+      try {
+        await axiosInstance.post('/review', {
+          prodid : prod.prod_id ,
+          consid:  cons_id,
+          review:data.review,
+        })
+        setReload(!reload)
+        reset();
+        onClose();
+        console.log('DATA', data);
+      } catch (error) {
+        console.error(error);
+      }
     }
+    else{
+      window.location.href = '/auth/login'
+    }
+    
   };
 
   const onCancel = () => {
@@ -74,7 +90,7 @@ export default function ProductDetailsNewReviewForm({ onClose, ...other }) {
         <DialogTitle> Add Review </DialogTitle>
 
         <DialogContent>
-          <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1.5}>
+          {/* <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1.5}>
             <Typography variant="body2">Your review about this product:</Typography>
 
             <Controller
@@ -82,15 +98,15 @@ export default function ProductDetailsNewReviewForm({ onClose, ...other }) {
               control={control}
               render={({ field }) => <Rating {...field} value={Number(field.value)} />}
             />
-          </Stack>
+          </Stack> */}
 
           {!!errors.rating && <FormHelperText error> {errors.rating?.message}</FormHelperText>}
 
-          <RHFTextField name="review" label="Review *" multiline rows={3} sx={{ mt: 3 }} />
+          <RHFTextField name="review" label="Review *" multiline rows={3} sx={{ mt: 3, width:400 }} />
 
-          <RHFTextField name="name" label="Name *" sx={{ mt: 3 }} />
+          {/* <RHFTextField name="name" label="Name *" sx={{ mt: 3 }} />
 
-          <RHFTextField name="email" label="Email *" sx={{ mt: 3 }} />
+          <RHFTextField name="email" label="Email *" sx={{ mt: 3 }} /> */}
         </DialogContent>
 
         <DialogActions>

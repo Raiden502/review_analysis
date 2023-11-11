@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import sumBy from 'lodash/sumBy';
 // @mui
 import { Divider, Typography, Rating, Button, LinearProgress, Stack, Box } from '@mui/material';
@@ -14,10 +14,14 @@ import ProductDetailsReviewNewDialog from './ProductDetailsNewReviewForm';
 // ----------------------------------------------------------------------
 
 ProductDetailsReview.propTypes = {
-  product: PropTypes.object,
+  productDetailed: PropTypes.object,
+  setReload: PropTypes.any,
+  reload:PropTypes.bool
 };
 
-export default function ProductDetailsReview({ product }) {
+export default function ProductDetailsReview({ productDetailed, setReload, reload}) {
+
+  const product = productDetailed?.reviews
 
   const [openReview, setOpenReview] = useState(false);
 
@@ -28,6 +32,21 @@ export default function ProductDetailsReview({ product }) {
   const handleCloseReview = () => {
     setOpenReview(false);
   };
+
+  const calculateAverageRating = (data) => {
+    if (!data || data.length === 0) {
+      return 0; // Return 0 if there is no data
+    }
+    const totalPoints = data.reduce((sum, item) => sum + item.rating, 0);
+    const averageRating = totalPoints / data.length;
+    // Assuming ratings are in the range of 1 to 5, we scale the average to be out of 5
+    const scaledRating = ((averageRating / 5) * 5).toFixed(1);;
+    return parseFloat(scaledRating);
+  };
+
+  const averageRating = useMemo(() => calculateAverageRating(product), [product]);
+
+  console.log("prod", product)
 
   // const total = sumBy(ratings, (star) => star.starCount);
 
@@ -53,12 +72,12 @@ export default function ProductDetailsReview({ product }) {
             Average rating
           </Typography>
 
-          <Typography variant="h2">{3}/5</Typography>
+          <Typography variant="h2">{averageRating}/5</Typography>
 
-          <Rating readOnly value={3.1} precision={0.1} />
+          <Rating readOnly value={averageRating*1.0} precision={0.1} />
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(product.length)} reviews)
+            ({fShortenNumber(product.length?product.length:0)} reviews)
           </Typography>
         </Stack>
 
@@ -103,7 +122,7 @@ export default function ProductDetailsReview({ product }) {
 
       <ProductDetailsReviewList reviews={product} />
 
-      {/* <ProductDetailsReviewNewDialog open={openReview} onClose={handleCloseReview} /> */}
+      <ProductDetailsReviewNewDialog reload={reload} setReload={setReload} open={openReview} prod={productDetailed?.data[0]} onClose={handleCloseReview} />
     </>
   );
 }

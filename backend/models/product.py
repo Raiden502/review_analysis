@@ -31,3 +31,4 @@ class ProductModel(db.Model):
     p_desc = db.Column(db.String(500), nullable=False)
     p_date = db.Column(db.DateTime, default=newtime, nullable=False)
     p_status = db.Column(db.Boolean, nullable=False)
+    cover = db.Column(db.String(500), nullable=True)

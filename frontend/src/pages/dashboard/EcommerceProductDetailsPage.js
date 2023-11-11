@@ -55,12 +55,13 @@ export default function EcommerceProductDetailsPage() {
   const { product, isLoading, checkout } = useSelector((state) => state.product);
   console.log("product", product)
   const [currentTab, setCurrentTab] = useState('description');
+  const [reload, setReload] = useState(false)
 
   useEffect(() => {
     if (id) {
       dispatch(getProduct(id));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, reload]);
 
   const handleAddCart = (newProduct) => {
     dispatch(addToCart(newProduct));
@@ -78,8 +79,8 @@ export default function EcommerceProductDetailsPage() {
     },
     {
       value: 'reviews',
-      label: `Reviews (${!product?.reviews ? product?.reviews.length : '0'})`,
-      component: product?.reviews ? <ProductDetailsReview product={product?.reviews} /> : null,
+      label: `Reviews (${product?.reviews ? product?.reviews.length : '0'})`,
+      component: product?.reviews ? <ProductDetailsReview reload={reload} setReload={setReload} productDetailed={product} /> : null,
     },
   ];
 

@@ -88,8 +88,8 @@ def HandleProdRegistration(request):
     try:
         with db.session.connection() as conn:
             query = f"""
-                    INSERT INTO products (p_name, p_category, p_tag, p_code, p_price, p_desc, p_date, p_status)
-                    VALUES (:name, :category, :tag, :code, :price, :desc, :date, :active)
+                    INSERT INTO products (p_name, p_category, p_tag, p_code, p_price, p_desc, p_date, p_status, cover)
+                    VALUES (:name, :category, :tag, :code, :price, :desc, :date, :active, :cover)
                 """
             sql = text(query)
             params = {
@@ -101,6 +101,8 @@ def HandleProdRegistration(request):
                 "desc": data["desc"],
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "active": data["active"],
+                "cover": "https://images.unsplash.com/photo-1602253057119-44d745d9b860?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlzaHxlbnwwfHwwfHx8MA%3D%3D"
+
             }
             result = conn.execute(sql, params)
             conn.commit()
@@ -180,15 +182,29 @@ def HandleProdDel(request):
     data = request.json
     try:
         with db.session.connection() as conn:
-            query = f"""
+            query1 = f"""
+                    DELETE FROM orders
+                    WHERE prod = :id;
+                """
+            sql1 = text(query1)
+
+            query2 = f"""
+                    DELETE FROM reviews
+                    WHERE prod = :id;
+                """
+            sql2 = text(query2)
+
+            query3 = f"""
                     DELETE FROM products
                     WHERE prod_id = :id;
                 """
-            sql = text(query)
+            sql3 = text(query3)
             params = {
                 "id": data["prod_id"],
             }
-            result = conn.execute(sql, params)
+            result = conn.execute(sql1, params)
+            result = conn.execute(sql2, params)
+            result = conn.execute(sql3, params)
             conn.commit()
             if result.rowcount > 0:
                 return {
@@ -227,7 +243,7 @@ def HandleReview(request):
                 "prodid": data["prodid"],
                 "consid": data["consid"],
                 "review": data["review"],
-                "rating": int(rating[0]),
+                "rating": 5 if(int(rating[0])==1) else 1,
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             result = conn.execute(sql, params)
@@ -288,7 +304,11 @@ def HandleProdDet(request):
             params = {"id": data["prod_id"]}
             result = conn.execute(sql, params)
             query = f"""
-                    select * from reviews where prod = :id
+                    SELECT r.rev_id, p.p_name as prod, c.c_name as cons, r.review as review, r.rating, r.rev_date as rev_date
+                    FROM reviews r
+                    JOIN products p ON r.prod = p.prod_id
+                    JOIN consumers c ON r.cons = c.cons_id
+                    where r.prod = :id;
                 """
             sql = text(query)
             result2 = conn.execute(sql, {"id": int(data["prod_id"])})

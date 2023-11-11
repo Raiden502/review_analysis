@@ -41,9 +41,9 @@ export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncre
             alignItems="center"
             sx={{ typography: 'body2', color: 'text.secondary' }}
           >
-            size: <Label sx={{ ml: 0.5 }}> {size} </Label>
+            {/* size: <Label sx={{ ml: 0.5 }}> {size} </Label> */}
             <Divider orientation="vertical" sx={{ mx: 1, height: 16 }} />
-            <ColorPreview colors={colors} />
+            {/* <ColorPreview colors={colors} /> */}
           </Stack>
         </Stack>
       </TableCell>

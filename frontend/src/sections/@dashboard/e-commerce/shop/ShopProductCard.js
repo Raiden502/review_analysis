@@ -26,8 +26,7 @@ export default function ShopProductCard({ product }) {
   // const { id, name, cover, price, colors, status, available, sizes, priceSale } = product;
 
   const status = true
-  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
-  const {p_category, p_code,  p_date,  p_desc,  p_name,  p_price,  p_status,  p_tag,  prod_id} = product;
+  const {p_category, p_code,  p_date,  p_desc,  p_name,  p_price,  p_status,  p_tag,  prod_id, cover} = product;
 
   const dispatch = useDispatch();
 
@@ -35,11 +34,11 @@ export default function ShopProductCard({ product }) {
 
   const handleAddCart = async () => {
     const newProduct = {
-      prod_id,
-      p_name,
-      cover,
+      id:prod_id,
+      name:p_name,
+      "cover":cover,
       // available,
-      p_price,
+      price:p_price,
       // colors: [colors[0]],
       // size: sizes[0],
       quantity: 1,

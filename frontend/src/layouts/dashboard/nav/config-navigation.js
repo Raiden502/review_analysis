@@ -60,7 +60,7 @@ const navConfig = [
       // E-COMMERCE
       { title: 'Shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.booking },
       { title: 'Checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
-      { title: 'Orders list', path: PATH_DASHBOARD.invoice.list, icon: ICONS.menuItem },
+      // { title: 'Orders list', path: PATH_DASHBOARD.invoice.list, icon: ICONS.menuItem },
     ],
   },
 ];

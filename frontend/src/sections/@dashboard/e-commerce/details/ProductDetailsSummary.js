@@ -42,10 +42,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   const navigate = useNavigate();
 
   const {
-    id,
-    name,
+    prod_id,
+    p_name,
     sizes,
-    price,
+    p_price,
     cover,
     status,
     colors,
@@ -56,17 +56,17 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     inventoryType,
   } = product;
 
-  const alreadyProduct = cart.map((item) => item.id).includes(id);
+  const alreadyProduct = cart.map((item) => item.id).includes(prod_id);
 
   const isMaxQuantity =
-    cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+    cart.filter((item) => item.id === prod_id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
-    id,
-    name,
+    id:prod_id,
+    name:p_name,
     cover,
     available,
-    price,
+    price:p_price,
     colors: 'blue',
     size: 4,
     quantity: available < 1 ? 0 : 1,
@@ -92,7 +92,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
       if (!alreadyProduct) {
         onAddCart({
           ...data,
-          colors: [values.colors],
+          // colors: [values.colors],
           subtotal: data.price * data.quantity,
         });
       }

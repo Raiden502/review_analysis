@@ -112,7 +112,7 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
-    const { accessToken, user, error_code } = response.data;
+    const { accessToken, user, error_code, data } = response.data;
     console.log(error_code)
     if (error_code) {
       setSession(null);
@@ -125,6 +125,7 @@ export function AuthProvider({ children }) {
       });
     } else {
       localStorage.setItem('accessToken', accessToken)
+      localStorage.setItem('cons_id', data.consid)
       dispatch({
         type: 'LOGIN',
         payload: {

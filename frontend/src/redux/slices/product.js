@@ -79,7 +79,7 @@ const slice = createSlice({
           if (isExisted) {
             return {
               ...product,
-              colors: uniq([...product.colors, ...newProduct.colors]),
+              // colors: uniq([...product.colors, ...newProduct.colors]),
               quantity: product.quantity + 1,
             };
           }

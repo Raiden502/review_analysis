@@ -84,6 +84,8 @@ export default function ProductDetailsCarousel({ product }) {
 
   const [selectedImage, setSelectedImage] = useState(-1);
 
+  const {cover} = product
+
   // const imagesLightbox = product?.images.map((img) => ({ src: img }));
   const imagesLightbox = [{ src: '' }, {src:''}]
 
@@ -138,8 +140,6 @@ export default function ProductDetailsCarousel({ product }) {
   const handleNext = () => {
     carousel2.current?.slickNext();
   };
-
-  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
 
   const renderLargeImg = (
     <Box sx={{ mb: 3, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>

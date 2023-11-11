@@ -32,7 +32,7 @@ export default function ProductDetailsReviewList({ reviews }) {
         }}
       >
         {reviews.map((review, index) => (
-          <ReviewItem key={index} review={review} />
+          <ReviewItem key={index} reviews={review} />
         ))}
       </Stack>
 
@@ -55,13 +55,16 @@ export default function ProductDetailsReviewList({ reviews }) {
 // ----------------------------------------------------------------------
 
 ReviewItem.propTypes = {
-  review: PropTypes.object,
+  reviews: PropTypes.object,
 };
 
-function ReviewItem({ review }) {
-  const { name, rating, comment, helpful, postedAt, avatarUrl, isPurchased } = review;
+function ReviewItem({ reviews }) {
+  const { cons, rating, review, helpful, rev_date,} = reviews;
 
+  const isPurchased = true
   const [isHelpful, setIsHelpful] = useState(false);
+
+  const avatarUrl = "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1699703287~exp=1699703887~hmac=0372087636b0cc1a934db26fdb32424b39236605ddbd6ecc5966defc3962ddb2"
 
   return (
     <Stack
@@ -93,11 +96,11 @@ function ReviewItem({ review }) {
 
         <Stack spacing={{ md: 0.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {name}
+            {cons}
           </Typography>
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }} noWrap>
-            {fDate(postedAt)}
+            {fDate(rev_date)}
           </Typography>
         </Stack>
       </Stack>
@@ -119,7 +122,7 @@ function ReviewItem({ review }) {
           </Typography>
         )}
 
-        <Typography variant="body2">{comment}</Typography>
+        <Typography variant="body2">{review}</Typography>
 
         <Stack
           spacing={1}
@@ -136,7 +139,7 @@ function ReviewItem({ review }) {
             startIcon={<Iconify icon={!isHelpful ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
             onClick={() => setIsHelpful(!isHelpful)}
           >
-            {isHelpful ? 'Helpful' : 'Thank'}({fShortenNumber(!isHelpful ? helpful : helpful + 1)})
+            {isHelpful ? 'Helpful' : 'Thank'}
           </Button>
         </Stack>
       </Stack>

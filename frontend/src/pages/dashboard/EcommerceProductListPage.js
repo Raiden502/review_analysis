@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -36,6 +36,7 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
+
 import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/list';
 import axiosInstance from '../../utils/axios';
 
@@ -99,11 +100,14 @@ export default function EcommerceProductListPage() {
     dispatch(getProducts());
   }, [dispatch]);
 
+  const firstRender = useRef(true)
   useEffect(() => {
-    if (products.length && tableData.length===0) {
+    if (products.length && tableData.length===0 && firstRender.current) {
+      console.log("trigg`")
       setTableData(products);
+      firstRender.current = false
     }
-  }, [products, tableData, openConfirm]);
+  }, [products, tableData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -120,12 +124,12 @@ export default function EcommerceProductListPage() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
-    setOpenConfirm(false);
+    setOpenConfirm(!openConfirm);
   };
 
   const handleFilterName = (event) => {
@@ -143,8 +147,8 @@ export default function EcommerceProductListPage() {
       const res =  await axiosInstance.post('/delprod', { prod_id: id })
   
       if (res.data.error_code === 0) {
-        console.log(res.data)
-        const deleteRow = tableData.filter((row) => row.id !== id);
+        const deleteRow = tableData.filter((row) => row.prod_id !== id);
+        console.log("del", deleteRow, id)
         setSelected([]);
         setTableData(deleteRow);
         if (page > 0) {
@@ -281,6 +285,8 @@ export default function EcommerceProductListPage() {
                           onDeleteRow={() => handleDeleteRow(row.prod_id)}
                           onEditRow={() => handleEditRow(row.p_name)}
                           onViewRow={() => handleViewRow(row.p_name)}
+                          onDelConfirm = {handleCloseConfirm}
+                          confirmState = {openConfirm}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -311,7 +317,7 @@ export default function EcommerceProductListPage() {
         </Card>
       </Container>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -332,7 +338,7 @@ export default function EcommerceProductListPage() {
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

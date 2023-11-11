@@ -31,6 +31,8 @@ ProductTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onDelConfirm:PropTypes.any,
+  confirmState:PropTypes.bool,
 };
 
 export default function ProductTableRow({
@@ -40,22 +42,13 @@ export default function ProductTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  onDelConfirm,
+  confirmState,
 }) {
 
-  const cover = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
-  const { p_name, p_date, p_category, p_price } = row;
-
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const { p_name, p_date, p_category, p_price, cover } = row;
 
   const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
 
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
@@ -65,6 +58,7 @@ export default function ProductTableRow({
     setOpenPopover(null);
   };
 
+  console.log("open", confirmState)
   return (
     <>
       <TableRow hover selected={selected}>
@@ -127,7 +121,7 @@ export default function ProductTableRow({
       >
         <MenuItem
           onClick={() => {
-            handleOpenConfirm();
+            onDelConfirm();
             handleClosePopover();
           }}
           sx={{ color: 'error.main' }}
@@ -148,8 +142,8 @@ export default function ProductTableRow({
       </MenuPopover>
 
       <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
+        open={confirmState}
+        onClose={onDelConfirm}
         title="Delete"
         content="Are you sure want to delete?"
         action={
