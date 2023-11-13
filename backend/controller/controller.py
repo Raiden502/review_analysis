@@ -51,7 +51,7 @@ def HandleRegistration(request):
                 """
             sql = text(query)
             params = {
-                "name": data["firstName"] + data["lastName"],
+                "name": data["firstName"] +" "+ data["lastName"],
                 "email": data["email"],
                 "password": data["password"],
                 "role": "user",
@@ -60,13 +60,21 @@ def HandleRegistration(request):
             }
             result = conn.execute(sql, params)
             conn.commit()
-            if result.rowcount > 0:
+
+            query = f"""
+                    select cons_id, c_role, c_is_active, c_name, c_email from consumers where c_email=:email and c_password=:pass
+                """
+            sql = text(query)
+            params = {"email": data["email"], "pass": data["password"]}
+            result = conn.execute(sql, params)
+            response = result.fetchone() or None
+            if response:
                 return {
                     "status": "success",
                     "error_code": 0,
                     "message": "Successfully registered",
                     "accessToken": "3245etgfdety6256",
-                    "user": data["email"],
+                    "user": {"consid": response[0], "role": response[1], "active":response[2], "displayName":response[3], "email":response[4]},
                 }
             else:
                 return {

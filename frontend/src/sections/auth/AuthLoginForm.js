@@ -57,6 +57,8 @@ export default function AuthLoginForm() {
     }
   };
 
+  console.log("ffff", isSubmitSuccessful, isSubmitting)
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -98,7 +100,7 @@ export default function AuthLoginForm() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
+        loading={isSubmitting}
         sx={{
           bgcolor: 'text.primary',
           color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),

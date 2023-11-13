@@ -117,7 +117,7 @@ export function AuthProvider({ children }) {
     const { accessToken, user, error_code, data } = response.data;
     console.log(error_code)
     if (error_code) {
-      setSession(null);
+      // setSession(null);
       dispatch({
         type: 'INITIAL',
         payload: {
@@ -146,21 +146,34 @@ export function AuthProvider({ children }) {
       firstName,
       lastName,
     });
-    const { accessToken, user } = response.data;
-
-    localStorage.setItem('accessToken', accessToken);
-
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user,
-      },
-    });
+    const { accessToken, user, error_code } = response.data;
+    console.log(error_code)
+    if (error_code) {
+      // setSession(null);
+      dispatch({
+        type: 'INITIAL',
+        payload: {
+          isAuthenticated: false,
+          user: null,
+        },
+      });
+    } else {
+      localStorage.setItem('accessToken', accessToken)
+      localStorage.setItem('cons_id', user.consid)
+      localStorage.setItem('users', JSON.stringify(user))
+      dispatch({
+        type: 'REGISTER',
+        payload: {
+          user,
+        },
+      });
+    }
   }, []);
 
   // LOGOUT
   const logout = useCallback(() => {
     setSession(null);
+    window.localStorage.clear()
     dispatch({
       type: 'LOGOUT',
     });

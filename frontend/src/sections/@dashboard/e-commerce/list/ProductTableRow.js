@@ -10,6 +10,7 @@ import {
   MenuItem,
   TableCell,
   IconButton,
+  Typography,
   Link,
 } from '@mui/material';
 // utils
@@ -76,7 +77,7 @@ export default function ProductTableRow({
               sx={{ borderRadius: 1.5, width: 48, height: 48 }}
             />
 
-            <Link
+            {/* <Link
               noWrap
               color="inherit"
               variant="subtitle2"
@@ -84,7 +85,8 @@ export default function ProductTableRow({
               sx={{ cursor: 'pointer' }}
             >
               {p_name}
-            </Link>
+            </Link> */}
+            <Typography>{p_name}</Typography>
           </Stack>
         </TableCell>
 
