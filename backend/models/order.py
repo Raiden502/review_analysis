@@ -24,7 +24,7 @@ class OrderModels(db.Model):
 
 
     ord_id = db.Column(db.BigInteger, autoincrement=True, primary_key=True)
-    prod =  db.Column(db.BigInteger, db.ForeignKey("products.prod_id"))
+    prod =  db.Column(db.String(200), db.ForeignKey("products.prod_id"))
     cons = db.Column(db.BigInteger, db.ForeignKey("consumers.cons_id"))
     o_mobile = db.Column(db.String(60), nullable=False)
     pay_status = db.Column(db.String(300), nullable=False)

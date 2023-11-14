@@ -21,7 +21,7 @@ class ReviewModel(db.Model):
     rev_date:datetime
 
     rev_id = db.Column(db.BigInteger, autoincrement=True, primary_key=True)
-    prod =  db.Column(db.BigInteger, db.ForeignKey("products.prod_id"))
+    prod =  db.Column(db.String(200), db.ForeignKey("products.prod_id"))
     cons = db.Column(db.BigInteger, db.ForeignKey("consumers.cons_id"))
     review = db.Column(db.String(200), nullable=False)
     rating = db.Column(db.Integer, nullable=False)

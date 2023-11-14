@@ -123,8 +123,10 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data) => {
+    const ts = Math.floor(Date.now() / 1000).toString();
+  
     const newprod = {
-      prod_id:currentProduct?.prod_id || '',
+      prod_id: currentProduct?.prod_id || ts,
       name: values.name,
       category: values.category,
       tag: values.tags,
@@ -132,7 +134,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       price: values.priceSale,
       desc: values.description,
       active: values.inStock,
-    };
+    };    
     await axiosInstance
       .post(!isEdit?'/addprod':'/editprod', newprod)
       .then((res) => {
@@ -140,7 +142,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         if (res.data.error_code === 0) {
           reset();
           enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-          navigate(PATH_DASHBOARD.eCommerce.list);
         }
         else {
           enqueueSnackbar('Failed');
@@ -150,6 +151,20 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         enqueueSnackbar('Error');
         console.error(err);
       });
+
+      const formData = new FormData();
+      formData.append('photo', values.images[0]);
+      await axiosInstance
+      .post(!isEdit?`/photoreg/${ts}`:`/photoreg/${currentProduct?.prod_id}`,formData)
+        .then((res) => {
+          reset();
+          navigate(PATH_DASHBOARD.eCommerce.list);
+        })
+        .catch((err) => {
+          enqueueSnackbar('Error');
+          console.error(err);
+        });
+      
   };
 
   const handleDrop = useCallback(

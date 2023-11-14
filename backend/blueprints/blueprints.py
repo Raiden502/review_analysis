@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, make_response, abort, send_file
 from flask.blueprints import Blueprint
 from ..controller.controller import *
 
@@ -41,3 +41,29 @@ def prodDetail():
 def adminDashboard():
     return jsonify(HandleAdminDash(request=request))
 
+@blueprint.route("/photoreg/<index>", methods=['POST'])
+def new_image(index):
+    return jsonify(handleupload(request,index))
+
+@blueprint.route('/uploads/<index>', methods=["GET"])
+def get_file(index):
+    # Define the list of possible file extensions
+    file_extensions = ['.jpg', '.png', '.jpeg']
+
+    for extension in file_extensions:
+        image_path = os.path.join('.\images', f"{index}{extension}")
+        
+        # Check if the image file exists
+        if os.path.isfile(image_path):
+            with open(image_path, 'rb') as image_file:
+                # Read the image data as bytes
+                image_data = image_file.read()
+                # Set the content type based on the file extension
+                content_type = f'image/{extension[1:]}'  # Remove the dot from the extension
+                response = make_response(image_data)
+                response.headers['Content-Type'] = content_type
+                # Return the image data as a response
+                return response
+
+    # If none of the files exist, return a 404 status code
+    abort(404)

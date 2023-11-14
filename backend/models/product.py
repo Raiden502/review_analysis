@@ -21,7 +21,7 @@ class ProductModel(db.Model):
     p_date:datetime
     p_status: bool
 
-    prod_id = db.Column(db.BigInteger, autoincrement=True, primary_key=True)
+    prod_id = db.Column(db.String(200), nullable=False, primary_key=True)
     p_name = db.Column(db.String(200), nullable=False)
     p_category = db.Column(db.String(100), nullable=False)
     p_tag = db.Column(db.ARRAY(db.String), nullable=False)

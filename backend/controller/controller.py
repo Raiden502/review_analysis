@@ -2,12 +2,26 @@ from ..db.db_handler import db
 from sqlalchemy import create_engine, text
 from datetime import datetime
 import pickle
-
+import os
+import time
+from werkzeug.utils import secure_filename
 
 def dictfetchall(cursor):
     columns = cursor.keys()
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+def remove_images_by_filename(directory_path, file_name_prefix):
+    for file in os.listdir(directory_path):
+        file_path = os.path.join(directory_path, file)
+
+        # Check if the file has the specified file name prefix
+        if file.startswith(file_name_prefix):
+            # Remove the file
+            try:
+                os.remove(file_path)
+                print(f"Removed file: {file_path}")
+            except OSError as e:
+                continue
 
 def HandleLogin(request):
     data = request.json
@@ -96,11 +110,12 @@ def HandleProdRegistration(request):
     try:
         with db.session.connection() as conn:
             query = f"""
-                    INSERT INTO products (p_name, p_category, p_tag, p_code, p_price, p_desc, p_date, p_status, cover)
-                    VALUES (:name, :category, :tag, :code, :price, :desc, :date, :active, :cover)
+                    INSERT INTO products (prod_id, p_name, p_category, p_tag, p_code, p_price, p_desc, p_date, p_status, cover)
+                    VALUES (:prod_id, :name, :category, :tag, :code, :price, :desc, :date, :active, :cover)
                 """
             sql = text(query)
             params = {
+                "prod_id":data['prod_id'],
                 "name": data["name"],
                 "category": data["category"],
                 "tag": data["tag"],
@@ -109,7 +124,7 @@ def HandleProdRegistration(request):
                 "desc": data["desc"],
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "active": data["active"],
-                "cover": "https://images.unsplash.com/photo-1602253057119-44d745d9b860?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlzaHxlbnwwfHwwfHx8MA%3D%3D"
+                "cover": ""
 
             }
             result = conn.execute(sql, params)
@@ -133,7 +148,56 @@ def HandleProdRegistration(request):
             "error_code": 1,
             "message": "An error occurred during insertion",
         }
+    
+def handleupload(request, prod_id):
+    try:
+        if 'photo' in request.files:
+            file= request.files['photo']
+            print(file)
+            # Get the original file extension
+            _, file_extension = os.path.splitext(file.filename)
 
+            # Use the secure_filename function to ensure a valid filename
+            filename = secure_filename(prod_id + file_extension)
+            # Save the image file with the custom filename
+            file.save(os.path.join('./images', filename))
+        else:
+            raise Exception("image not found")
+        
+        with db.session.connection() as conn:
+            query = f"""
+                    UPDATE products
+                    SET cover = :cover
+                    WHERE prod_id = :prod_id;
+                """
+            sql = text(query)
+
+            params = {
+                "prod_id":prod_id,
+                "cover": f"http://127.0.0.1:5000/uploads/{prod_id}"
+            }
+            result = conn.execute(sql, params)
+            conn.commit()
+            if result.rowcount > 0:
+                return {
+                    "status": "success",
+                    "error_code": 0,
+                    "message": "Successfully registered",
+                    "cover": f"http://127.0.0.1:5000/uploads/{prod_id}"
+                }
+            else:
+                return {
+                    "status": "failed",
+                    "error_code": 1,
+                    "message": "Data not inserted",
+                }
+    except Exception as e:
+        print("error: ", e)
+        return {
+            "status": "failed",
+            "error_code": 1,
+            "message": "An error occurred during insertion",
+        }
 
 def HandleProdEdit(request):
     data = request.json
@@ -165,6 +229,7 @@ def HandleProdEdit(request):
             }
             result = conn.execute(sql, params)
             conn.commit()
+            remove_images_by_filename("./images", data["prod_id"])
             if result.rowcount > 0:
                 return {
                     "status": "success",
@@ -184,6 +249,7 @@ def HandleProdEdit(request):
             "error_code": 1,
             "message": "An error occurred during insertion",
         }
+
 
 
 def HandleProdDel(request):
@@ -214,6 +280,7 @@ def HandleProdDel(request):
             result = conn.execute(sql2, params)
             result = conn.execute(sql3, params)
             conn.commit()
+            remove_images_by_filename("./images", data["prod_id"])
             if result.rowcount > 0:
                 return {
                     "status": "success",
